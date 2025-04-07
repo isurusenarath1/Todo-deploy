@@ -27,6 +27,7 @@ This guide explains how to deploy both the frontend and backend of the Todo App 
    - Add the following environment variables:
      - `MONGODB_URI`: Your MongoDB connection string
      - `PORT`: Set to 8080 or leave it blank (Vercel will set it automatically)
+     - `FRONTEND_URL`: The URL of your deployed frontend (e.g., `https://todo-app-frontend-vercel.vercel.app`)
 
 4. Deploy the backend:
    - Using dashboard: Trigger a manual deployment
@@ -67,14 +68,19 @@ This guide explains how to deploy both the frontend and backend of the Todo App 
    - Using dashboard: Trigger a manual deployment
    - Using CLI: Run `vercel --prod`
 
+7. After deployment, note down your frontend URL and update the `FRONTEND_URL` environment variable in your backend project settings with this URL.
+
 ## Troubleshooting
+
+- **CORS issues**: If you encounter CORS issues, make sure:
+  1. The `FRONTEND_URL` environment variable in your backend is correctly set to your frontend URL
+  2. Your frontend URL is included in the `allowedOrigins` array in the backend's `index.js` file
+  3. The backend is properly configured to accept requests from your frontend domain
 
 - **Build errors with Terser**: If you see an error message like `terser not found`, make sure to install it:
   ```bash
   npm install --save-dev terser
   ```
-
-- **CORS issues**: If you encounter CORS issues, make sure your backend is properly configured to accept requests from your frontend domain.
 
 - **API connection issues**: Verify that the environment variable `VITE_API_URL` is correctly set to your backend URL.
 
