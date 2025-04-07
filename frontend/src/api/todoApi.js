@@ -1,12 +1,17 @@
 import axios from 'axios';
 
+// Ensure we're using the correct protocol (https) and path
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/todos';
 
-console.log('API URL:', API_URL); // Debugging log
+// Force HTTPS for production deployments
+const secureApiUrl = API_URL.replace('http://', 'https://');
+
+console.log('Original API URL from env:', API_URL);
+console.log('Using secure API URL:', secureApiUrl);
 
 // Create an axios instance with default configuration
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: secureApiUrl,
   withCredentials: false, // Changed to false since we don't need cookies
   headers: {
     'Content-Type': 'application/json',
@@ -18,7 +23,7 @@ const api = axios.create({
 // Add a request interceptor for debugging
 api.interceptors.request.use(
   config => {
-    console.log('Making request to:', config.url);
+    console.log('Making request to:', config.baseURL + config.url);
     return config;
   },
   error => {

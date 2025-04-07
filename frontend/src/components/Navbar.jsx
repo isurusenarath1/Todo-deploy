@@ -9,6 +9,12 @@ function Navbar() {
   const location = useLocation();
   const { todoCounts, isLoading, error } = useTodoCount();
 
+  // Fix for API URL display - ensure HTTPS
+  const getSecureApiUrl = () => {
+    const apiUrl = import.meta.env.VITE_API_URL || '';
+    return apiUrl.replace('http://', 'https://');
+  };
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -115,7 +121,7 @@ function Navbar() {
             <span className="text-xs">Please check console for details.</span>
           </p>
           <div className="text-xs mt-1">
-            API URL: {import.meta.env.VITE_API_URL || 'Not defined'}
+            API URL: {getSecureApiUrl()}
           </div>
         </div>
       )}
