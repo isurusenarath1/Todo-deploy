@@ -43,25 +43,36 @@ This guide explains how to deploy both the frontend and backend of the Todo App 
      ```
    - Replace this URL with your actual backend URL from step 5 above
 
-2. Navigate to the frontend folder:
+2. Install required dependencies including Terser (required for minification):
    ```bash
    cd todo-app/frontend
+   npm install --save-dev terser
    ```
 
-3. Create a new Vercel project:
+3. Test the build locally to ensure it works:
+   ```bash
+   npm run build
+   ```
+
+4. Create a new Vercel project:
    - Using the dashboard: Import your GitHub repo on the Vercel dashboard
    - Using CLI: Run `vercel` in the frontend directory
 
-4. Set up the build configuration:
+5. Set up the build configuration:
    - Build Command: `npm run build`
    - Output Directory: `dist`
    - Install Command: `npm install`
 
-5. Deploy the frontend:
+6. Deploy the frontend:
    - Using dashboard: Trigger a manual deployment
    - Using CLI: Run `vercel --prod`
 
 ## Troubleshooting
+
+- **Build errors with Terser**: If you see an error message like `terser not found`, make sure to install it:
+  ```bash
+  npm install --save-dev terser
+  ```
 
 - **CORS issues**: If you encounter CORS issues, make sure your backend is properly configured to accept requests from your frontend domain.
 
