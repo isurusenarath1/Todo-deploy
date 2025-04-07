@@ -33,7 +33,7 @@ A full-stack Todo List application with CRUD functionality built with React, Nod
 ### Backend Setup
 1. Navigate to the backend directory:
    ```
-   cd todo-app/backend
+   cd backend
    ```
 
 2. Install dependencies:
@@ -55,7 +55,7 @@ A full-stack Todo List application with CRUD functionality built with React, Nod
 ### Frontend Setup
 1. Navigate to the frontend directory:
    ```
-   cd todo-app/frontend
+   cd frontend
    ```
 
 2. Install dependencies:
@@ -73,7 +73,6 @@ A full-stack Todo List application with CRUD functionality built with React, Nod
 ## Project Structure
 
 ```
-todo-app/
 ├── backend/             # Backend code
 │   ├── models/          # MongoDB models
 │   ├── routes/          # API routes
