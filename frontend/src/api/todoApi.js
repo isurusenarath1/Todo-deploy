@@ -2,19 +2,48 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/todos';
 
+console.log('API URL:', API_URL); // Debugging log
+
 // Create an axios instance with default configuration
 const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true, // Enable sending cookies in cross-origin requests
+  withCredentials: false, // Changed to false since we don't need cookies
   headers: {
     'Content-Type': 'application/json',
-  }
+    'Accept': 'application/json',
+  },
+  timeout: 10000 // 10 second timeout
 });
+
+// Add a request interceptor for debugging
+api.interceptors.request.use(
+  config => {
+    console.log('Making request to:', config.url);
+    return config;
+  },
+  error => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Add a response interceptor for debugging
+api.interceptors.response.use(
+  response => {
+    console.log('Received response:', response.status);
+    return response;
+  },
+  error => {
+    console.error('Response error:', error.message);
+    console.error('Error details:', error.response ? error.response.data : 'No response data');
+    return Promise.reject(error);
+  }
+);
 
 // Get all todos
 export const getAllTodos = async () => {
   try {
-    const response = await api.get('/');
+    const response = await api.get('');
     return response.data;
   } catch (error) {
     console.error('Error fetching todos:', error);
@@ -78,7 +107,7 @@ export const getTodoById = async (id) => {
 // Create a new todo
 export const createTodo = async (todoData) => {
   try {
-    const response = await api.post('/', todoData);
+    const response = await api.post('', todoData);
     return response.data;
   } catch (error) {
     console.error('Error creating todo:', error);

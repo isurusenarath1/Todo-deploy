@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      background-color: #f5f5f5;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Todo API Test</h1>
+  <p>This page tests connectivity to the Todo API.</p>
+  
+  <button id="test-button">Test API Connection</button>
+  <div id="result">Click the button to test the API...</div>
+
+  <script>
+    document.getElementById('test-button').addEventListener('click', testApi);
+
+    async function testApi() {
+      const resultElement = document.getElementById('result');
+      resultElement.textContent = 'Testing API connection...';
+      
+      try {
+        // The API endpoint
+        const apiUrl = 'https://todo-deploy-iota.vercel.app/api/todos';
+        
+        // Log the URL we're trying to connect to
+        console.log('Connecting to:', apiUrl);
+        resultElement.textContent += `\nConnecting to: ${apiUrl}`;
+        
+        // Fetch with detailed options
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          mode: 'cors'
+        });
+        
+        // Log the response status
+        console.log('Response status:', response.status);
+        resultElement.textContent += `\nResponse status: ${response.status}`;
+        
+        if (response.ok) {
+          // Parse and display the JSON data
+          const data = await response.json();
+          console.log('Data:', data);
+          resultElement.textContent += `\n\nSuccess! Received ${data.length} todos.\n\nFirst few todos:`;
+          
+          // Show the first 2 todos (or all if less than 2)
+          const displayCount = Math.min(2, data.length);
+          for (let i = 0; i < displayCount; i++) {
+            resultElement.textContent += `\n\n- Title: ${data[i].title}\n  Status: ${data[i].status}`;
+          }
+        } else {
+          // Handle HTTP error
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+          resultElement.textContent += `\n\nError: HTTP ${response.status}\n${errorText}`;
+        }
+      } catch (error) {
+        // Handle network or other errors
+        console.error('Fetch error:', error);
+        resultElement.textContent += `\n\nFetch error: ${error.message}`;
+        
+        // Additional information for debugging
+        resultElement.textContent += '\n\nPossible causes:';
+        resultElement.textContent += '\n- CORS policy blocking the request';
+        resultElement.textContent += '\n- Network connectivity issues';
+        resultElement.textContent += '\n- API server is down';
+        resultElement.textContent += '\n- Incorrect API URL';
+      }
+    }
+  </script>
+</body>
+</html> 

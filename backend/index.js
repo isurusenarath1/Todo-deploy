@@ -10,27 +10,19 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS configuration
-const allowedOrigins = [
-  process.env.FRONTEND_URL || 'http://localhost:5173', // Default to local development URL
-  'https://todo-app-frontend-vercel.vercel.app', // Add your actual frontend URL
-  'https://todo-app-frontend.vercel.app', // Alternative URL format
-];
+// Log environment variables for debugging (don't include sensitive info in production!)
+console.log('Backend starting with:');
+console.log('PORT:', PORT);
+console.log('FRONTEND_URL:', process.env.FRONTEND_URL || 'Not set');
 
-// Middleware
+// CORS configuration - temporarily allow all origins for debugging
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true
+  origin: '*', // Allow all origins temporarily for debugging
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// JSON middleware
 app.use(express.json());
 
 // Routes
