@@ -16,8 +16,15 @@ console.log('FRONTEND_URL:', process.env.FRONTEND_URL || 'Not set');
 
 // CORS configuration
 const allowedOrigins = [
-  process.env.FRONTEND_URL || 'http://localhost:5173'
+  process.env.FRONTEND_URL || 'http://localhost:5173', // Frontend URL from environment variable
+  'http://localhost:3000',                             // Common React development port
+  'http://127.0.0.1:5173',                             // Local IP alternative
 ];
+
+// For Vercel deployment, accept all vercel.app subdomains
+if (process.env.VERCEL) {
+  allowedOrigins.push('https://*.vercel.app');
+}
 
 console.log('Allowed origins for CORS:', allowedOrigins);
 
@@ -27,7 +34,15 @@ app.use(cors({
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+    // Check if the origin is allowed or matches the vercel.app pattern
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (allowedOrigin === origin) return true;
+      // Handle wildcard for vercel.app domains
+      if (allowedOrigin === 'https://*.vercel.app' && origin.endsWith('.vercel.app')) return true;
+      return false;
+    });
+    
+    if (isAllowed || process.env.NODE_ENV === 'development') {
       callback(null, true);
     } else {
       console.log('CORS blocked request from:', origin);
