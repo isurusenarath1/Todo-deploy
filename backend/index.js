@@ -16,9 +16,7 @@ console.log('FRONTEND_URL:', process.env.FRONTEND_URL || 'Not set');
 
 // CORS configuration
 const allowedOrigins = [
-  process.env.FRONTEND_URL || 'http://localhost:5173', // Default to local development URL
-  'http://localhost:3000',                             // Common React development port
-  'http://127.0.0.1:5173',                             // Local IP alternative
+  process.env.FRONTEND_URL || 'http://localhost:5173'
 ];
 
 console.log('Allowed origins for CORS:', allowedOrigins);
