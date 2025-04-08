@@ -30,26 +30,45 @@
     button:hover {
       background-color: #45a049;
     }
+    input {
+      padding: 10px;
+      width: 100%;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
   <h1>Todo API Test</h1>
   <p>This page tests connectivity to the Todo API.</p>
   
+  <label for="api-url">API URL to test:</label>
+  <input type="text" id="api-url" placeholder="Enter your API URL (e.g., https://example.com/api/todos)" value="" />
+  
   <button id="test-button">Test API Connection</button>
   <div id="result">Click the button to test the API...</div>
 
   <script>
+    // Try to get the API URL from environment or use empty
+    const defaultApiUrl = '';
+    document.getElementById('api-url').value = defaultApiUrl;
+    
     document.getElementById('test-button').addEventListener('click', testApi);
 
     async function testApi() {
       const resultElement = document.getElementById('result');
       resultElement.textContent = 'Testing API connection...';
       
+      // Get the API URL from the input field
+      const apiUrl = document.getElementById('api-url').value.trim();
+      
+      if (!apiUrl) {
+        resultElement.textContent = 'Please enter an API URL to test.';
+        return;
+      }
+      
       try {
-        // The API endpoint - ensure HTTPS
-        const apiUrl = 'https://todo-deploy-iota.vercel.app/api/todos';
-        
         // Log the URL we're trying to connect to
         console.log('Connecting to:', apiUrl);
         resultElement.textContent += `\nConnecting to: ${apiUrl}`;

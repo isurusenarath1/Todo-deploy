@@ -1,18 +1,19 @@
 import axios from 'axios';
 
-// Ensure we're using the correct protocol (https) and path
+// Get API URL from environment variables with fallback to local development
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/todos';
 
-// Force HTTPS for production deployments
-const secureApiUrl = API_URL.replace('http://', 'https://');
+// Force HTTPS for production deployments if URL starts with http:// and isn't localhost
+const secureApiUrl = API_URL.includes('localhost') ? 
+  API_URL : 
+  API_URL.replace('http://', 'https://');
 
-console.log('Original API URL from env:', API_URL);
-console.log('Using secure API URL:', secureApiUrl);
+console.log('API URL:', secureApiUrl);
 
 // Create an axios instance with default configuration
 const api = axios.create({
   baseURL: secureApiUrl,
-  withCredentials: false, // Changed to false since we don't need cookies
+  withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -20,7 +21,7 @@ const api = axios.create({
   timeout: 10000 // 10 second timeout
 });
 
-// Add a request interceptor for debugging
+// Add request logging
 api.interceptors.request.use(
   config => {
     console.log('Making request to:', config.baseURL + config.url);
@@ -32,7 +33,7 @@ api.interceptors.request.use(
   }
 );
 
-// Add a response interceptor for debugging
+// Add response logging
 api.interceptors.response.use(
   response => {
     console.log('Received response:', response.status);

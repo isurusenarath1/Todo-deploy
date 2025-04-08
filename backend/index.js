@@ -11,15 +11,32 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Log environment variables for debugging (don't include sensitive info in production!)
-console.log('Backend starting with:');
-console.log('PORT:', PORT);
+console.log('Backend starting on port:', PORT);
 console.log('FRONTEND_URL:', process.env.FRONTEND_URL || 'Not set');
 
-// CORS configuration - temporarily allow all origins for debugging
+// CORS configuration
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:5173', // Default to local development URL
+  'http://localhost:3000',                             // Common React development port
+  'http://127.0.0.1:5173',                             // Local IP alternative
+];
+
+console.log('Allowed origins for CORS:', allowedOrigins);
+
+// CORS middleware with configured origins
 app.use(cors({
-  origin: '*', // Allow all origins temporarily for debugging
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked request from:', origin);
+      callback(null, false); // Just block the request without throwing error
+    }
+  },
+  credentials: true
 }));
 
 // JSON middleware

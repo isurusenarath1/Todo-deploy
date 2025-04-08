@@ -4,9 +4,11 @@ import { getAllTodoCounts } from '../api/todoApi';
 // Create context
 export const TodoCountContext = createContext();
 
-// Log the API URL from environment variables for debugging
-console.log('API URL from .env:', import.meta.env.VITE_API_URL);
-console.log('Environment:', import.meta.env.MODE);
+// Log API URL in development mode only
+if (import.meta.env.DEV) {
+  console.log('API URL from .env:', import.meta.env.VITE_API_URL);
+  console.log('Environment:', import.meta.env.MODE);
+}
 
 // Create provider component
 export const TodoCountProvider = ({ children }) => {
@@ -20,11 +22,15 @@ export const TodoCountProvider = ({ children }) => {
 
   const fetchCounts = useCallback(async () => {
     try {
-      console.log('Fetching todo counts...');
+      if (import.meta.env.DEV) {
+        console.log('Fetching todo counts...');
+      }
       setIsLoading(true);
       setError(null);
       const counts = await getAllTodoCounts();
-      console.log('Received todo counts:', counts);
+      if (import.meta.env.DEV) {
+        console.log('Received todo counts:', counts);
+      }
       setTodoCounts(counts);
     } catch (error) {
       console.error('Error fetching todo counts:', error);
@@ -36,7 +42,6 @@ export const TodoCountProvider = ({ children }) => {
         // that falls out of the range of 2xx
         console.error('Error response data:', error.response.data);
         console.error('Error response status:', error.response.status);
-        console.error('Error response headers:', error.response.headers);
       } else if (error.request) {
         // The request was made but no response was received
         console.error('No response received:', error.request);
@@ -53,7 +58,7 @@ export const TodoCountProvider = ({ children }) => {
     fetchCounts();
     
     // Set up a refresh interval to keep counts updated
-    const intervalId = setInterval(fetchCounts, 60000); // Update every minute instead of 30 seconds
+    const intervalId = setInterval(fetchCounts, 60000); // Update every minute
     
     // Clean up interval on unmount
     return () => clearInterval(intervalId);

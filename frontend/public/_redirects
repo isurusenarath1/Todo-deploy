@@ -1,2 +1,4 @@
-# Redirect all HTTP traffic to HTTPS
+# Generic HTTP to HTTPS redirect for production servers
+# This works with Netlify and other providers
+# Remove or modify based on your hosting provider
 http://*  https://:splat  301! 
