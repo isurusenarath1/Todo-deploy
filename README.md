@@ -21,6 +21,7 @@ todo-app/
 │   ├── .env             # Environment variables
 │   ├── index.js         # Server entry point
 │   ├── vercel.json      # Vercel deployment configuration
+│   ├── deploy-vercel.js # Vercel deployment helper script
 │   └── package.json     # Backend dependencies
 │
 └── frontend/            # React.js frontend
@@ -32,6 +33,8 @@ todo-app/
     │   ├── hooks/       # Custom hooks
     │   └── pages/       # Page components
     ├── .env             # Environment variables
+    ├── vercel.json      # Vercel deployment configuration
+    ├── deploy-vercel.js # Vercel deployment helper script
     └── package.json     # Frontend dependencies
 ```
 
@@ -92,69 +95,56 @@ todo-app/
 
 ### Deploying to Vercel
 
+We've included helper scripts to simplify the deployment process for both the backend and frontend.
+
 #### Backend Deployment to Vercel
 
-1. Make sure you have the Vercel CLI installed:
-   ```
-   npm install -g vercel
-   ```
-
-2. Login to Vercel:
-   ```
-   vercel login
-   ```
-
-3. Navigate to the backend directory:
+1. Navigate to the backend directory:
    ```
    cd todo-app/backend
    ```
 
-4. Deploy to Vercel:
+2. Run the deployment script:
    ```
-   vercel
+   npm run deploy
    ```
 
-5. During deployment, Vercel will ask for configuration:
-   - Set up and deploy: `y`
-   - Which scope: Select your scope
-   - Link to existing project: `n` (first time) or `y` (subsequent deployments)
-   - Project name: `todo-app-backend` (or your preferred name)
-   - Directory: `./` (current directory)
+   This script will:
+   - Check if Vercel CLI is installed and install it if needed
+   - Verify you're logged in to Vercel
+   - Ask if you want to deploy to production
+   - Deploy your backend to Vercel
 
-6. After deployment, Vercel will provide a URL for your backend API. Note this URL.
+3. After deployment, Vercel will provide a URL for your backend API. Note this URL for use in the frontend deployment.
 
-7. Set up environment variables in the Vercel dashboard:
+4. Set up environment variables in the Vercel dashboard:
    - Go to your project on the Vercel dashboard
    - Navigate to Settings > Environment Variables
    - Add the following variables:
      - `MONGODB_URI`: Your MongoDB connection string
      - `FRONTEND_URL`: Your frontend URL (when deployed)
 
-8. For production deployment, use:
+#### Frontend Deployment to Vercel
+
+1. Navigate to the frontend directory:
    ```
-   vercel --prod
+   cd todo-app/frontend
    ```
 
-#### Frontend Deployment
-
-1. Update the `.env` file with your deployed backend URL:
+2. Run the deployment script:
    ```
-   # Comment out the development URL
-   # VITE_API_URL=http://localhost:5000/api/todos
-   
-   # Uncomment and update the production URL with your Vercel backend URL
-   VITE_API_URL=https://your-vercel-backend-url.vercel.app/api/todos
+   npm run deploy
    ```
 
-2. Build the frontend:
-   ```
-   npm run build
-   ```
+   This script will:
+   - Check if Vercel CLI is installed and install it if needed
+   - Verify you're logged in to Vercel
+   - Prompt for your backend URL (the one you obtained from the backend deployment)
+   - Automatically update your `.env` file with the production API URL
+   - Build your frontend
+   - Deploy to Vercel
 
-3. Deploy to your preferred hosting service or Vercel:
-   ```
-   vercel
-   ```
+3. After deployment, update the backend's `FRONTEND_URL` environment variable in the Vercel dashboard with your new frontend URL.
 
 ### Generic Deployment Options
 
